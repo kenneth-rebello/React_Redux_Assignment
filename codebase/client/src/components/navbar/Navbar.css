@@ -1,0 +1,21 @@
+.header{
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h2{
+    color: whitesmoke;
+}
+.header p{
+    color: white;
+}
+
+.header .links{
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}

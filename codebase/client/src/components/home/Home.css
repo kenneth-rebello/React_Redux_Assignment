@@ -1,0 +1,9 @@
+.home{
+    padding: 20px;
+}
+
+.articles{
+    display: grid;
+    grid-template-columns: auto auto auto;
+    justify-content: space-around;
+}
