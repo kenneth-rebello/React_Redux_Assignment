@@ -11,8 +11,7 @@ const config = {
 export const login = data => async dispatch => {
     try {
         const response = await axios.post("/auth", JSON.stringify(data), config);
-        console.log(response);
-        if(response.data.success && response.data.data.token){
+        if(response.data.success){
             const token = response.data.data.token;
             setAuthToken(token);
             if(token){
@@ -21,9 +20,12 @@ export const login = data => async dispatch => {
                     type: LOGIN_SUCCESSFUL
                 })
             }
+        }else if(response.data.error){
+            throw Error(response.data.error[0].msg);
         }
-    } catch (err) {
-        console.log(err);
+        
+    } catch (error) {
+        throw Error(error.message);
     }
 }
 
@@ -46,17 +48,20 @@ export const signup = (data) => async dispatch => {
                 'Content-Type': 'multipart/form-data'
             }
         });
-        console.log(response);
         if(response.data.success){
             const credentials = {
-                email: data.email,
-                password: data.password
+                email: data.get("email"),
+                password: data.get("password")
             }
             await dispatch(login(credentials));
+            
+        }else if(response.data.error){
+            throw Error(response.data.error[0].msg);
         }
         return response.data.success;
-    } catch (error) {
         
+    } catch (error) {
+        throw Error(error.message);
     }
 }
 
@@ -64,12 +69,17 @@ export const signup = (data) => async dispatch => {
 export const fetchCurrentUser = () => async dispatch => {
     try {
         const response = await axios.get("/user");
-        dispatch({
-            type: FETCH_USER,
-            payload: response.data.data
-        }); 
+        if(response.data.success){
+            dispatch({
+                type: FETCH_USER,
+                payload: response.data.data
+            });
+        }
+        else if(response.data.error){
+            throw Error(response.data.error[0].msg);
+        }
     } catch (error) {
-        
+        console.log(error.message);
     }
 }
 

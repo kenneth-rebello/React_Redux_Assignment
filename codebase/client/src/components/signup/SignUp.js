@@ -61,12 +61,6 @@ const SignUp = ({signup, setError, unsetError, authCompleted, history}) => {
       setTimeout(unsetError, 100);
       return;
     }
-    const emailPattern =  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if(!emailPattern.test(email.current.value)){
-      setError("Invalid email address");
-      setTimeout(unsetError, 100);
-      return;
-    }
     if(name.current.value.trim()===""){
       setError("Name required");
       setTimeout(unsetError, 100);
@@ -96,7 +90,9 @@ const SignUp = ({signup, setError, unsetError, authCompleted, history}) => {
         history.push("/");
       }
     } catch(err){
-      console.log("Show error/ error handling")
+      setError(err.message);
+      setTimeout(unsetError, 100);
+      return;
     }
   };
   
@@ -176,7 +172,6 @@ const SignUp = ({signup, setError, unsetError, authCompleted, history}) => {
             onChange={e=>setFile(e.target.files[0])}
             fullWidth
             variant="outlined"
-            margin="normal"
           />
           <Button
             type="submit"

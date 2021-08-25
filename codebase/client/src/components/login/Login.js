@@ -67,7 +67,9 @@ const Login = ({authCompleted, login, setError, unsetError}) => {
       await login(data);
       authCompleted();
     } catch(err){
-      console.log(err)
+      setError(err.message);
+      setTimeout(unsetError, 100);
+      return;
     }
   };
   

@@ -106,6 +106,9 @@ const removeArticle = async(id) => {
             return false;
         }
         const remaining = data.articles.filter(article => article.id != id);
+        writeToDataStore({
+            articles: remaining
+        });
         return true;
     }
     catch(e){
@@ -117,11 +120,13 @@ const removeArticle = async(id) => {
 const readFromDataStore = () => {
     try {
         data = fs.readFileSync(DATA_STORE, 'utf8');   
+        data = JSON.parse(data);
+        if(!data) return {articles:[]};
+        if(!data.articles) return {articles:[]};
+        return data;
     } catch (error) {
-        return null;
+        return {articles:[]};
     }
-    if(!data) return null;
-    return JSON.parse(data);
 }
 
 const writeToDataStore = (data) => {

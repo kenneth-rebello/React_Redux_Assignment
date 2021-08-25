@@ -20,7 +20,8 @@ router.post("/",
         if(!validationErrors.isEmpty()){
             return res.json({
                 error: validationErrors.array(),
-                success: false
+                success: false,
+                statusCode: 400
             });
         }
 
@@ -30,8 +31,9 @@ router.post("/",
         const user = await getUserByEmail(userCredentials.email);
         if(!user){
             return res.json({
-                error:[{ msg: "Invalid credentials email"}],
-                success: false
+                error:[{ msg: "Invalid credentials"}],
+                success: false,
+                statusCode: 400
             });
         }
 
@@ -39,8 +41,9 @@ router.post("/",
         const isMatch = await matchPassword(userCredentials.password || "", user.password || "");
         if(!isMatch){
             return res.json({
-                error: [{ msg: 'Invalid credentials pass'}],
-                success: false
+                error: [{ msg: 'Invalid credentials'}],
+                success: false,
+                statusCode: 400
             });
         }
 
@@ -60,7 +63,8 @@ router.post("/",
                 data:{
                     token: token
                 },
-                success: true
+                success: true,
+                statusCode: 200
             });
         })
     }
@@ -77,7 +81,8 @@ router.post('/change-password',
         if(!validationErrors.isEmpty()){
             return res.json({
                 error: validationErrors.array(),
-                success: false
+                success: false,
+                statusCode: 400
             });
         }
 
@@ -89,7 +94,8 @@ router.post('/change-password',
         if(!isMatch){
             return res.json({
                 error: [{ msg: 'Invalid credentials'}],
-                success: false
+                success: false,
+                statusCode: 400
             });
         }
 
@@ -102,12 +108,14 @@ router.post('/change-password',
                 data:{
                     msg:`Password for ${user.name} updated`
                 },
-                success: false
+                success: true,
+                statusCode: 200
             })
         }else{
             return res.json({ 
                 error: [{msg: "There was an issue changing the password"}],
-                success: false
+                success: false,
+                statusCode: 500
             })
         }
 

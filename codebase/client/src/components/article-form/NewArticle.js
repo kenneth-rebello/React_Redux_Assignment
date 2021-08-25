@@ -41,20 +41,23 @@ const NewArticle = ({currentUser, addArticle, setError, unsetError}) => {
     }
 
     const date = new Date();
-    const data = {
-      title: title.current.value,
-      content: content.current.value,
-      created_at: date.toString(),
-      author_id: currentUser.id,
-      author_name: currentUser.name
-    }
+
 
     try{
-      addArticle(data);
+      const data = {
+        title: title.current.value,
+        content: content.current.value,
+        created_at: date.toString(),
+        author_id: currentUser?.id,
+        author_name: currentUser?.name
+      }
+      await addArticle(data);
       title.current.value="";
       content.current.value="";
     } catch(err){
-      console.log(err);
+      setError(err.message);
+      setTimeout(unsetError, 100);
+      return;
     }
   };
   

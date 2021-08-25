@@ -131,12 +131,14 @@ const sanitizeUser = (user) => {
 
 const readFromDataStore = async() => {
     try {
-        data = fs.readFileSync(DATA_STORE, 'utf8');   
+        data = fs.readFileSync(DATA_STORE, 'utf8'); 
+        data = JSON.parse(data);
+        if(!data) return {users:[]};
+        if(!data.users) return {users:[]};
+        return data;
     } catch (error) {
-        return null;
+        return {users:[]};
     }
-    if(!data) return null;
-    return JSON.parse(data);
 }
 
 const writeToDataStore = async(data) => {

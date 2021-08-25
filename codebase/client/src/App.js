@@ -27,7 +27,7 @@ const App = ({isAuth, fetchCurrentUser, alreadyLoggedIn, error}) => {
     const token = localStorage.getItem("token");
     alreadyLoggedIn(token);
     if(token){
-      fetchCurrentUser();
+      fetchCurrentUser()
     }
     setLoading(false);
   }, [alreadyLoggedIn, fetchCurrentUser]);

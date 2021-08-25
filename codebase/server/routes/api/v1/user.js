@@ -54,7 +54,8 @@ router.post('/',
         if(!validationErrors.isEmpty()){
             return res.json({
                 error: validationErrors.array(),
-                success: false
+                success: false,
+                statusCode: 400
             });
         }
         const newUser = req.body;
@@ -64,7 +65,10 @@ router.post('/',
         }
 
         const result = await registerUser(newUser);
-        return res.json(result.response)
+        return res.json({
+            ...result.response,
+            statusCode: result.status
+        })
 })
 
 
@@ -74,15 +78,17 @@ router.get("/", auth, async(req,res) =>{
     
     const user = await getUserById(req.user.id);
     if(!user){
-        return res.status(404).json({
+        return res.json({
             error: [{ msg: "There was en error fetching your profile"}],
-            success: false
+            success: false,
+            statusCode: 404
         });
     }
 
-    return res.status(200).json({
+    return res.json({
         data: sanitizeUser(user),
-        success: true
+        success: true,
+        statusCode: 200
     });
 })
 
@@ -92,7 +98,10 @@ router.get('/all', auth, async (req, res) => {
     
     const result = await getAllUsers();
 
-    return res.status(result.status).json(result.response)
+    return res.json({
+        ...result.response,
+        statusCode: 200
+    })
 });
 
 
@@ -110,9 +119,10 @@ router.post('/update',
 
         const validationErrors = validationResult(req);
         if(!validationErrors.isEmpty()){
-            return res.status(400).json({
+            return res.json({
                 error: validationErrors.array(),
-                success: false
+                success: false,
+                statusCode: 400
             });
         }
         const newData = req.body;
@@ -132,17 +142,19 @@ router.post('/update',
         }
 
         if(await updateUser(updatedUser)){
-            return res.status(200).json({ 
+            return res.json({ 
                 data: {
                     msg:`User ${updatedUser.name} updated`,
                     new: sanitizeUser(updatedUser)
                 },
-                success: true
+                success: true,
+                statusCode: 400
             })
         }else{
-            return res.status(500).json({ 
+            return res.json({ 
                 error: [{msg: "There was an issue updating the user"}],
-                success: false
+                success: false,
+                statusCode: 500
             })
         }
 })

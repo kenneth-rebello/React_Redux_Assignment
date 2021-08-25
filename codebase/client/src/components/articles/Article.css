@@ -51,3 +51,7 @@
     font-style: italic;
     align-self: flex-end;
 }
+
+.article .author button{
+    color: red;
+}

@@ -7,7 +7,7 @@ import config from '../../environments/main';
 import './Navbar.css';
 
 
-const Navbar = ({currentUser, logout, message}) => {
+const Navbar = ({currentUser, isAuth, logout, message}) => {
 
     const logoutUser = () => {
         logout();
@@ -32,8 +32,8 @@ const Navbar = ({currentUser, logout, message}) => {
                                     src={`${config.staticUrl}/uploads/${currentUser?.profile_picture}`}
                                     alt={`${currentUser?.name.charAt(0)}`}
                                 />}
-                                <p>{currentUser?.name}</p>
-                                {currentUser && <p onClick={logoutUser}>Logout</p>}
+                                {isAuth && <p>{currentUser?.name || "Failed to load user details"}</p>}
+                                {isAuth && <p onClick={logoutUser}>Logout</p>}
                             </div>
                         }
                     </div>
@@ -45,7 +45,8 @@ const Navbar = ({currentUser, logout, message}) => {
 }
 
 const mapStateToProps = state => ({
-    currentUser: state.auth.currentUser
+    currentUser: state.auth.currentUser,
+    isAuth: state.auth.isAuth
 })
 
 const mapDispatchToProps = {
