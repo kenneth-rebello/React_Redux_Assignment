@@ -1,5 +1,5 @@
 import axios from "axios"
-import { ADD_POST, DELETE_POST, FETCH_POSTS } from "../types";
+import { ADD_POST, DELETE_POST, FETCH_POSTS, SET_POST, UNSET_POST, UPDATE_POST } from "../types";
 
 const config = {
     headers:{
@@ -38,6 +38,34 @@ export const fetchArticles = data => async dispatch => {
         }
     } catch (error) {
         console.log(error.message);
+    }
+}
+
+export const editPost = (article) => async dispatch => {
+    dispatch({
+        type: SET_POST,
+        payload: article
+    })
+}
+export const unsetPost = () => dispatch => {
+    dispatch({
+        type: UNSET_POST
+    })
+}
+
+export const updateArticle = article => async dispatch => {
+    try {
+        const response = await axios.put(`/article/${article.id}`, JSON.stringify(article), config);
+        if(response.data.success){
+            dispatch({
+                type: UPDATE_POST,
+                payload: response.data.data.new
+            });
+        }else if(response.data.error){
+            throw Error(response.data.error[0].msg);
+        }
+    } catch (error) {
+        throw Error(error.message);
     }
 }
 

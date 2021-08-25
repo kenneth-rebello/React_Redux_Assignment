@@ -1,9 +1,18 @@
 .newArticle{
     margin: 20px;
     margin-top: 0;
+    padding: 10px;
+    border: 2px inset mediumaquamarine;
 }
 
 
 .newArticle h2{
     color: royalblue;
+    margin-left: 0;
+}
+
+.newArticle .controls{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }

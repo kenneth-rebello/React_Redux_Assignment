@@ -52,6 +52,6 @@
     align-self: flex-end;
 }
 
-.article .author button{
+.article .actions .edit button{
     color: red;
 }

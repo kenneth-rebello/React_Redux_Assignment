@@ -1,7 +1,8 @@
-import { ADD_POST, DELETE_POST, FETCH_POSTS } from '../types';
+import { ADD_POST, DELETE_POST, FETCH_POSTS, SET_POST, UNSET_POST, UPDATE_POST } from '../types';
 
 const initialState = {
-    all: []
+    all: [],
+    selectedArticle: null
 }
 
 export default function(state=initialState, action){
@@ -16,6 +17,25 @@ export default function(state=initialState, action){
             return {
                 ...state,
                 all: [action.payload, ...state.all]
+            }
+        }
+        case SET_POST:{
+            return {
+                ...state,
+                selectedArticle: action.payload
+            }
+        }
+        case UNSET_POST:{
+            return {
+                ...state,
+                selectedArticle: null
+            }
+        }
+        case UPDATE_POST:{
+            return {
+                ...state,
+                selectedArticle: null,
+                all: [action.payload, ...state.all.filter(article => article?.id!==action.payload.id)]
             }
         }
         case DELETE_POST: {

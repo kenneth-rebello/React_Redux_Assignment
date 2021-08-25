@@ -4,7 +4,7 @@ import NewArticle from '../article-form/NewArticle'
 import { fetchArticles } from '../../redux/actions/articleActions';
 import Article from '../articles/Article';
 import { connect } from 'react-redux';
-import { TextField } from '@material-ui/core';
+import { Button, Divider, TextField } from '@material-ui/core';
 
 const Home = ({currentUser, articles, fetchArticles}) => {
 
@@ -12,6 +12,7 @@ const Home = ({currentUser, articles, fetchArticles}) => {
         fetchArticles();
     },[fetchArticles]);
     const [searchQuery, setSearchQuery] = React.useState("");
+    const [showForm, toggleShowForm] = React.useState(false);
 
     let filteredArticles = [];
     if(searchQuery.trim()!==""){
@@ -25,7 +26,18 @@ const Home = ({currentUser, articles, fetchArticles}) => {
     const sortedArticles = filteredArticles.sort((a,b)=>new Date(b.created_at) - new Date(a.created_at));
     return (
         <div className="home">
-            <NewArticle currentUser={currentUser}/>
+            <div className="controls">
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={()=>toggleShowForm(!showForm)}
+                >
+                    New Post
+                </Button>
+            </div>
+            {showForm && <NewArticle currentUser={currentUser} closeForm={()=>toggleShowForm(false)}/>}
+            <Divider className="divider"/>
+            <h2>All Posts</h2>
             <div className="search">
                 <TextField
                     variant="outlined"
@@ -39,7 +51,11 @@ const Home = ({currentUser, articles, fetchArticles}) => {
                 />
             </div>
             <div className="articles">
-                {sortedArticles.map(article => <Article key={article.id} {...article}/>)}
+                {sortedArticles.map(article => <Article 
+                    key={article.id} 
+                    {...article} 
+                    openForm={()=>toggleShowForm(true)}
+                />)}
             </div>
         </div>
     )

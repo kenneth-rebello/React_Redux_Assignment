@@ -99,6 +99,19 @@ const getArticleById = async(id) => {
     };
 }
 
+const updateArticle = async(updatedArticle) => {
+    try{
+        let res = await getAllArticles();
+        articles = res.response.data.filter(user => user.id !== updatedArticle.id);
+        articles.push(updatedArticle);
+        const success = writeToDataStore({"articles": articles})
+        return success;
+    }
+    catch(e) {
+        return false;
+    }
+}
+
 const removeArticle = async(id) => {
     try{
         const data = readFromDataStore();
@@ -144,5 +157,6 @@ module.exports = {
     postArticle,
     getAllArticles,
     getArticleById,
+    updateArticle,
     removeArticle
 }

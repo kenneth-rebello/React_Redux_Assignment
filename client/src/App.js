@@ -9,6 +9,7 @@ import Login from './components/login/Login';
 import Home from './components/home/Home';
 import Navbar from './components/navbar/Navbar';
 import SignUp from './components/signup/SignUp';
+import Footer from './components/footer/Footer';
 
 
 import ErrorBoundary from './components/error-boundary/ErrorBoundary';
@@ -62,6 +63,7 @@ const App = ({isAuth, fetchCurrentUser, alreadyLoggedIn, error}) => {
             />
           </ErrorBoundary>
         </Switch>
+        <Footer/>
       </BrowserRouter>
     </div>
   )

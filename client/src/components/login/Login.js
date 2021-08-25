@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    minHeight: "90vh"
   },
   avatar: {
     margin: theme.spacing(1),

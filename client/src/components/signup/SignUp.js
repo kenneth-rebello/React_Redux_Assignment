@@ -21,14 +21,16 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    minHeight: "90vh"
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
+    width: "100%",
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(3)
   },
   label:{
     color: "darkblue",

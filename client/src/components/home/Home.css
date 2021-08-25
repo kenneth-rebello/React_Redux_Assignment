@@ -1,15 +1,33 @@
 .home{
     padding: 20px;
+    min-height: 80vh;
 }
 
-.articles{
+.home .controls{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 5px 40px;
+}
+.home .divider{
+    margin: 20px 0px;
+    padding: 0;
+    height: 2px;
+    background-color: darkgray;
+}
+.home h2{
+    color: royalblue;
+    margin-left: 20px;
+    font-size: 22px;
+    text-align: center;
+}
+.home .articles{
     display: grid;
     grid-template-columns: auto auto auto;
     justify-content: space-around;
 }
-
-.search{
-    margin: 5px 50px;
+.home .search{
+    margin: 5px 70px;
 }
 
 @media screen and (max-width: 400px){

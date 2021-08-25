@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import './NewArticle.css';
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
-import { addArticle } from "../../redux/actions/articleActions";
+import { addArticle, unsetPost, updateArticle } from "../../redux/actions/articleActions";
 import { connect } from "react-redux";
 import { setError, unsetError } from "../../redux/actions/errorActions";
 
@@ -16,25 +16,43 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
     backgroundColor: "mediumaquamarine"
   },
+  close: {
+    margin: theme.spacing(3, 2, 2),
+    backgroundColor: "red"
+  },
 }));
 
 
 
-const NewArticle = ({currentUser, addArticle, setError, unsetError}) => {
+const NewArticle = ({
+  closeForm, 
+  currentUser, selectedArticle, 
+  addArticle, updateArticle, unsetPost, setError, unsetError
+}) => {
   const classes = useStyles();
 
-  const title = React.useRef(null);
-  const content = React.useRef(null);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+
+  useEffect(()=>{
+    setTitle(selectedArticle?.title || "");
+    setContent(selectedArticle?.content || "");
+    return () => {
+      setTitle("");
+      setContent("");
+      unsetPost();
+    }
+  },[])
 
   const handleSubmit = async e => {
     e.preventDefault();
     
-    if(!title.current.value || title.current.value.trim()===""){
+    if(!title || title.trim()===""){
       setError("Title is required");
       setTimeout(unsetError, 100);
       return;
     }
-    if(!content.current.value || content.current.value.trim()===""){
+    if(!content || content.trim()===""){
       setError("Content is required");
       setTimeout(unsetError, 100);
       return;
@@ -42,18 +60,24 @@ const NewArticle = ({currentUser, addArticle, setError, unsetError}) => {
 
     const date = new Date();
 
-
     try{
       const data = {
-        title: title.current.value,
-        content: content.current.value,
+        title: title,
+        content: content,
         created_at: date.toString(),
         author_id: currentUser?.id,
         author_name: currentUser?.name
       }
-      await addArticle(data);
-      title.current.value="";
-      content.current.value="";
+      if(selectedArticle){
+        await updateArticle({
+          id: selectedArticle.id,
+          ...data
+        });
+      }
+      else{
+        await addArticle(data)
+      }
+      closeForm();
     } catch(err){
       setError(err.message);
       setTimeout(unsetError, 100);
@@ -76,7 +100,8 @@ const NewArticle = ({currentUser, addArticle, setError, unsetError}) => {
                 label="Blog title"
                 name="title"
                 autoComplete="title"
-                inputRef={title}
+                value={title}
+                onChange={e=>setTitle(e.target.value)}
             />
             <TextField
                 variant="outlined"
@@ -89,16 +114,27 @@ const NewArticle = ({currentUser, addArticle, setError, unsetError}) => {
                 label="Blog content"
                 name="content"
                 autoComplete="content"
-                inputRef={content}
+                value={content}
+                onChange={e=>setContent(e.target.value)}
             />
-            <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-            >
-                Post
-            </Button>
+            <div className="controls">
+              <Button
+                type="button"
+                varaiant="contained"
+                onClick={closeForm}
+                className={classes.close}
+              >
+                Close
+              </Button>
+              <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+              >
+                  Post
+              </Button>
+            </div>
         </form>
     </div>
   );
@@ -106,11 +142,14 @@ const NewArticle = ({currentUser, addArticle, setError, unsetError}) => {
 
 
 const mapStateToProps = state => ({
-  currentUser: state.auth.currentUser
+  currentUser: state.auth.currentUser,
+  selectedArticle: state.articles.selectedArticle
 })
 
 const mapDispatchToProps = {
   addArticle,
+  updateArticle,
+  unsetPost,
   setError,
   unsetError
 }
