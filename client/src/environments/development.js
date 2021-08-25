@@ -1,5 +1,5 @@
-let baseUrl = '';
-let staticUrl = ""
+let baseUrl = '/api/v1';
+let staticUrl = "/uploads"
 
 let updatedConfig = {
   "baseUrl": baseUrl,
