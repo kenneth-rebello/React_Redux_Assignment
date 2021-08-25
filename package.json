@@ -1,14 +1,18 @@
 {
-  "name": "node",
+  "name": "node-react-redux",
   "version": "1.0.0",
-  "description": "TalentLMS Assignment",
+  "description": "TalentLMS Assignmentfor Quantiphi",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server",
-    "dev": "nodemon server"
+    "dev": "nodemon server",
+    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
   },
-  "author": "",
+  "engines": {
+    "node": "12.18.3"
+  },
+  "author": "Kenneth Rebello",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",

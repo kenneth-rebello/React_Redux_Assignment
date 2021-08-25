@@ -1,0 +1,20 @@
+{
+    "articles": [
+        {
+            "title": "Test 1",
+            "content": "This is a test blog",
+            "created_at": "Tue Aug 24 2021 17:06:18 GMT+0530 (India Standard Time)",
+            "author_id": "6228b74a-e654-46d2-bc95-3451d056b501",
+            "author_name": "Jane Doe",
+            "id": "78d098a1-a6c9-44ef-a003-20a9c0e402a6"
+        },
+        {
+            "title": "Test 2",
+            "content": "This is a test too",
+            "created_at": "Tue Aug 24 2021 17:07:11 GMT+0530 (India Standard Time)",
+            "author_id": "6228b74a-e654-46d2-bc95-3451d056b501",
+            "author_name": "Jane Doe",
+            "id": "3851ce21-a5dd-404e-b8f9-1f66920e5289"
+        }
+    ]
+}

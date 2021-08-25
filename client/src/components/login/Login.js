@@ -3,8 +3,6 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
@@ -41,7 +39,6 @@ const Login = ({authCompleted, login, setError, unsetError}) => {
 
   const email = React.useRef(null);
   const password = React.useRef(null);
-  const rememberMe = React.useRef(null);
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -60,7 +57,6 @@ const Login = ({authCompleted, login, setError, unsetError}) => {
     const data = {
       email: email.current.value,
       password: password.current.value,
-      rememberMe: rememberMe.current.checked,
     }
 
     try{
@@ -109,11 +105,6 @@ const Login = ({authCompleted, login, setError, unsetError}) => {
             type="password"
             id="password"
             autoComplete="current-password"
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            inputRef={rememberMe}
-            label="Remember me"
           />
           <Button
             type="submit"

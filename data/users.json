@@ -1,0 +1,18 @@
+{
+    "users": [
+        {
+            "name": "John Doe",
+            "email": "john.doe@quantiphi.com",
+            "password": "$2a$10$E6ZzYUteO9mr1AYCJdSDXutjc9av4nYLat2sQxy6671W75rWN5iQC",
+            "phone": "8888888888",
+            "id": "26ed4987-f35b-44d1-b30a-d575cd522dba"
+        },
+        {
+            "email": "jane.doe@quantiphi.com",
+            "password": "$2a$10$ej8FlJ/VUrXUyz7xRxxFQ.zEwts80I.mLKlduVLJgVOJWPtlHvZBe",
+            "name": "Jane Doe",
+            "phone": "9999999999",
+            "id": "6228b74a-e654-46d2-bc95-3451d056b501"
+        }
+    ]
+}
