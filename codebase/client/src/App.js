@@ -1,62 +1,81 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import config from './environments/main';
+import { connect } from 'react-redux';
 import axios from 'axios';
-import './App.css';
+import { Toaster, toast } from 'react-hot-toast';
 
+import './App.css';
 import Login from './components/login/Login';
 import Home from './components/home/Home';
-import ErrorBoundary from './helper/Error';
-import setAuthToken from './services/setAuthToken';
-import { fetchCurrentUser } from './services/UserService';
 import Navbar from './components/navbar/Navbar';
 import SignUp from './components/signup/SignUp';
 
 
+import ErrorBoundary from './components/error-boundary/ErrorBoundary';
+import { fetchCurrentUser, alreadyLoggedIn } from './redux/actions/authActions';
+import config from './environments/main';
+
+
 axios.defaults.baseURL = config.baseUrl;
 
-export default function App() {
+const App = ({isAuth, fetchCurrentUser, alreadyLoggedIn, error}) => {
 
   const [loading, setLoading] = useState(true);
-  const [isAuth, setIsAuth] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
+
+  const authStateChanged = useCallback( async () => {
+    setLoading(true);
+    const token = localStorage.getItem("token");
+    alreadyLoggedIn(token);
+    if(token){
+      fetchCurrentUser();
+    }
+    setLoading(false);
+  }, [alreadyLoggedIn, fetchCurrentUser]);
 
   useEffect(()=>{
     authStateChanged();
-  },[]);
+  },[authStateChanged]);
 
-  const authStateChanged = async () => {
-    setLoading(true);
-    const token = localStorage.getItem("token");
-    setAuthToken(token);
-    if(token){
-      setIsAuth(true);
-      const response = await fetchCurrentUser();
-      setCurrentUser(response.data);
-    } else {
-      setIsAuth(false);
-      setCurrentUser(null);
+
+  useEffect(()=>{
+    if(error){
+      toast.error(error);
     }
-    setLoading(false);
-  }
-
+  },[error])
 
   return (
     <div>
-        <BrowserRouter>
+      <BrowserRouter>
+        <ErrorBoundary isNavBar={true}>
+          <Navbar authCompleted={authStateChanged}/>
+        </ErrorBoundary>
+        <Toaster />
+        <Switch>
           <ErrorBoundary>
-            <Navbar currentUser={currentUser} authCompleted={authStateChanged}/>
-            <Switch>
-                <Route exact path="/"     
-                  render={(props) =>  
-                    !loading && isAuth ? <Home currentUser={currentUser} {...props}/> 
-                    : <Login authCompleted={authStateChanged} {...props}/>}
-                />
-                <Route exact path="/signup" component={SignUp}/>
-            </Switch>
+            <Route exact path="/"     
+              render={(props) =>  
+                !loading && isAuth ? <Home {...props}/> 
+                : <Login authCompleted={authStateChanged} {...props}/>}
+            />
+            <Route exact path="/signup" render={(props) => 
+              <SignUp authCompleted={authStateChanged} {...props}/>}
+            />
           </ErrorBoundary>
-        </BrowserRouter>
-
+        </Switch>
+      </BrowserRouter>
     </div>
   )
 }
+
+const mapStateToProps = state => ({
+  currentUser: state.auth.currentUser,
+  isAuth: state.auth.isAuth,
+  error: state.error.message
+})
+
+const mapDispatchToProps = {
+  fetchCurrentUser, 
+  alreadyLoggedIn
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)

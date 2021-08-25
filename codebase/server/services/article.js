@@ -23,6 +23,7 @@ const postArticle = async(article) => {
                 data:{
                     msg:  `Article posted with ID ${article.id}`,
                     id: article.id,
+                    article: article
                 },
                 success: true
             },

@@ -1,18 +1,20 @@
 import React from "react";
-// import { Redirect } from "react-router-dom";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { login } from '../../services/LoginService';
+
+import { Link } from "react-router-dom";
+import { login } from '../../redux/actions/authActions';
+import { connect } from "react-redux";
+import { setError, unsetError } from "../../redux/actions/errorActions";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -34,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = ({authCompleted}) => {
+const Login = ({authCompleted, login, setError, unsetError}) => {
   const classes = useStyles();
 
   const email = React.useRef(null);
@@ -43,21 +45,29 @@ const Login = ({authCompleted}) => {
 
   const handleSubmit = async e => {
     e.preventDefault();
+
+    if(email.current.value.trim()===""){
+      setError("Email required");
+      setTimeout(unsetError, 100);
+      return;
+    }
+    if(password.current.value.length<6){
+      setError("Invalid Credentials");
+      setTimeout(unsetError, 100);
+      return;
+    }
+
     const data = {
       email: email.current.value,
       password: password.current.value,
       rememberMe: rememberMe.current.checked,
     }
-    
+
     try{
-        const response = await login(data);
-        if(response.success && response.data.token){
-          const token = response.data.token;
-          localStorage.setItem("token", token);
-        } 
-        authCompleted();
+      await login(data);
+      authCompleted();
     } catch(err){
-        console.log("Show error/ error handling")
+      console.log(err)
     }
   };
   
@@ -70,7 +80,7 @@ const Login = ({authCompleted}) => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Login
         </Typography>
         <form key={"haha"} className={classes.form} onSubmit={handleSubmit}>
           <TextField
@@ -112,15 +122,9 @@ const Login = ({authCompleted}) => {
           >
             Login
           </Button>
-
           <Grid container>
-            <Grid item xs>
-              <Link href="changepassword" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
             <Grid item>
-              <Link href="signup" variant="body2">
+              <Link to="/signup">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
@@ -130,4 +134,11 @@ const Login = ({authCompleted}) => {
     </Container>
   );
 }
-export default Login;
+
+const mapDispatchToProps = {
+  login,
+  setError,
+  unsetError
+}
+
+export default connect(null, mapDispatchToProps)(Login);

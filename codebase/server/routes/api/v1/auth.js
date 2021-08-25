@@ -18,7 +18,7 @@ router.post("/",
     async(req, res) =>{
         const validationErrors = validationResult(req);
         if(!validationErrors.isEmpty()){
-            return res.status(400).json({
+            return res.json({
                 error: validationErrors.array(),
                 success: false
             });
@@ -29,8 +29,8 @@ router.post("/",
         //Fetch user from data store
         const user = await getUserByEmail(userCredentials.email);
         if(!user){
-            return res.status(400).json({
-                error:[{ msg: "Invalid credentials"}],
+            return res.json({
+                error:[{ msg: "Invalid credentials email"}],
                 success: false
             });
         }
@@ -38,8 +38,8 @@ router.post("/",
         //Check password
         const isMatch = await matchPassword(userCredentials.password || "", user.password || "");
         if(!isMatch){
-            return res.status(400).json({
-                error: [{ msg: 'Invalid credentials'}],
+            return res.json({
+                error: [{ msg: 'Invalid credentials pass'}],
                 success: false
             });
         }
@@ -56,7 +56,7 @@ router.post("/",
             if(err){
                 console.log(err)
             };
-            res.status(200).json({
+            res.json({
                 data:{
                     token: token
                 },
@@ -75,7 +75,7 @@ router.post('/change-password',
     async(req, res) => {
         const validationErrors = validationResult(req);
         if(!validationErrors.isEmpty()){
-            return res.status(400).json({
+            return res.json({
                 error: validationErrors.array(),
                 success: false
             });
@@ -87,7 +87,7 @@ router.post('/change-password',
         //Check password
         const isMatch = await matchPassword(data.old_password, user.password);
         if(!isMatch){
-            return res.status(400).json({
+            return res.json({
                 error: [{ msg: 'Invalid credentials'}],
                 success: false
             });
@@ -98,14 +98,14 @@ router.post('/change-password',
 
         //Update in data store
         if(updateUser(user)){
-            return res.status(200).json({ 
+            return res.json({ 
                 data:{
                     msg:`Password for ${user.name} updated`
                 },
                 success: false
             })
         }else{
-            return res.status(500).json({ 
+            return res.json({ 
                 error: [{msg: "There was an issue changing the password"}],
                 success: false
             })

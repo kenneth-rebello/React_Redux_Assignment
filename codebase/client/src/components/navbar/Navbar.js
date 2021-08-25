@@ -1,15 +1,16 @@
 import { AppBar, Toolbar } from '@material-ui/core';
 import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { logout } from '../../services/LoginService';
+import { logout } from '../../redux/actions/authActions';
+import config from '../../environments/main';
 import './Navbar.css';
 
 
-const Navbar = ({currentUser, authCompleted}) => {
+const Navbar = ({currentUser, logout, message}) => {
 
     const logoutUser = () => {
         logout();
-        authCompleted();
     }
 
     return (
@@ -20,10 +21,21 @@ const Navbar = ({currentUser, authCompleted}) => {
                         <Link to="/">
                             <h2>Blogify</h2>
                         </Link>
-                        <div className="links">
-                            <p>{currentUser?.name}</p>
-                            {currentUser && <p onClick={logoutUser}>Logout</p>}
-                        </div>
+                        {message ? 
+                            <div className="links">
+                                <p>{message}</p>
+                            </div>
+                            :
+                            <div className="links">
+                                {currentUser?.profile_picture &&
+                                <img 
+                                    src={`${config.staticUrl}/uploads/${currentUser?.profile_picture}`}
+                                    alt={`${currentUser?.name.charAt(0)}`}
+                                />}
+                                <p>{currentUser?.name}</p>
+                                {currentUser && <p onClick={logoutUser}>Logout</p>}
+                            </div>
+                        }
                     </div>
                 </Toolbar>
             </AppBar>
@@ -32,4 +44,12 @@ const Navbar = ({currentUser, authCompleted}) => {
     )
 }
 
-export default Navbar
+const mapStateToProps = state => ({
+    currentUser: state.auth.currentUser
+})
+
+const mapDispatchToProps = {
+    logout
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

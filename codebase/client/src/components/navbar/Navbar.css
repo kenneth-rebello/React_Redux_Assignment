@@ -3,6 +3,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .header h2{
@@ -10,12 +12,21 @@
 }
 .header p{
     color: white;
+    font-size: 14px;
+    margin-left: 20px;
 }
 
 .header .links{
-    width: 200px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
+}
+
+
+.header .links img{
+    height: 40px;
+    width: 40px;
+    margin-left: 20px;
+    border-radius: 50%;
 }

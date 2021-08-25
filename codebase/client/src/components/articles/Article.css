@@ -1,7 +1,53 @@
 .article{
-    width: 300px;
+    width: 25vw;
     margin: 10px;
     padding: 10px;
-    border: 1px solid midnightblue;
     border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+@media screen and (max-width: 400px){
+    .article{
+        width: 80vw;              
+    }
+}
+
+.article:nth-child(even){
+    background-color: mediumaquamarine;
+    color: white;
+    border: 1px solid white;
+}
+.article:nth-child(odd){
+    background-color: whitesmoke;
+    color: royalblue;
+    border: 1px solid royalblue;
+}
+.article:nth-child(odd) .date{
+    margin: 3px;
+    font-size: 10px;
+    color: darkgray;
+    align-self: flex-end;
+}
+.article:nth-child(even) .date{
+    margin: 3px;
+    font-size: 10px;
+    color: whitesmoke;
+    align-self: flex-end;
+}
+
+.article .title{
+    margin: 5px;
+    font-size: 18px;
+}
+.article .content{
+    margin: 5px;
+    color: black;
+    font-size: 15px;
+}
+.article .author{
+    margin: 5px;
+    font-size: 13px;
+    font-style: italic;
+    align-self: flex-end;
 }

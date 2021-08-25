@@ -10,7 +10,10 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { signup } from '../../services/LoginService';
+import { signup } from '../../redux/actions/authActions';
+import { setError, unsetError } from '../../redux/actions/errorActions';
+import { connect } from "react-redux";
+import { Input } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -27,6 +30,12 @@ const useStyles = makeStyles((theme) => ({
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
+  label:{
+    color: "darkblue",
+    marginTop: "10px",
+    fontSize: "14px",
+    fontFamily:"Calibri"
+  },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
@@ -34,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const SignUp = ({authCompleted}) => {
+const SignUp = ({signup, setError, unsetError, authCompleted, history}) => {
   const classes = useStyles();
 
   const email = React.useRef(null);
@@ -42,26 +51,52 @@ const SignUp = ({authCompleted}) => {
   const confirm = React.useRef(null);
   const name = React.useRef(null);
   const phone = React.useRef(null);
+  const [file, setFile] = React.useState(null);
 
   const handleSubmit = async e => {
     e.preventDefault();
-    if(password.current.value !== confirm.current.value){
-        return
+
+    if(email.current.value.trim()===""){
+      setError("Email required");
+      setTimeout(unsetError, 100);
+      return;
     }
-    const data = {
-      email: email.current.value,
-      password: password.current.value,
-      name: name.current.value,
-      phone: phone.current.value,
+    const emailPattern =  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if(!emailPattern.test(email.current.value)){
+      setError("Invalid email address");
+      setTimeout(unsetError, 100);
+      return;
+    }
+    if(name.current.value.trim()===""){
+      setError("Name required");
+      setTimeout(unsetError, 100);
+      return;
+    }
+    if(password.current.value !== confirm.current.value){
+      setError("Passwords entered do not match");
+      setTimeout(unsetError, 100);
+      return;
+    }
+
+    const data = new FormData();
+    data.append("email", email.current.value);
+    data.append("password", password.current.value);
+    data.append("name", name.current.value);
+    if(phone.current.value.trim()!==""){
+      data.append("phone", phone.current.value);
+    }
+    if(file){
+      data.append("profile_picture", file);
     }
     
     try{
-        const response = await signup(data);
-        if(response.success){
-          
-        } 
+      const success = await signup(data); 
+      if(success){
+        authCompleted();
+        history.push("/");
+      }
     } catch(err){
-        console.log("Show error/ error handling")
+      console.log("Show error/ error handling")
     }
   };
   
@@ -74,7 +109,7 @@ const SignUp = ({authCompleted}) => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Sign-Up
         </Typography>
         <form key={"haha"} className={classes.form} onSubmit={handleSubmit}>
           <TextField
@@ -135,6 +170,14 @@ const SignUp = ({authCompleted}) => {
             autoComplete="phone"
             inputRef={phone}
           />
+          <p className={classes.label}>Profile Picture</p>
+          <Input
+            type="file"
+            onChange={e=>setFile(e.target.files[0])}
+            fullWidth
+            variant="outlined"
+            margin="normal"
+          />
           <Button
             type="submit"
             fullWidth
@@ -157,4 +200,11 @@ const SignUp = ({authCompleted}) => {
     </Container>
   );
 }
-export default SignUp;
+
+const mapDispatchToProps = {
+  signup,
+  setError,
+  unsetError
+}
+
+export default connect(null, mapDispatchToProps)(SignUp);

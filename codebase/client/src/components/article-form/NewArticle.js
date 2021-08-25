@@ -3,7 +3,9 @@ import './NewArticle.css';
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
-import { addArticle } from "../../services/ArticleService";
+import { addArticle } from "../../redux/actions/articleActions";
+import { connect } from "react-redux";
+import { setError, unsetError } from "../../redux/actions/errorActions";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -12,12 +14,13 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+    backgroundColor: "mediumaquamarine"
   },
 }));
 
 
 
-const NewArticle = ({currentUser, loadArticles}) => {
+const NewArticle = ({currentUser, addArticle, setError, unsetError}) => {
   const classes = useStyles();
 
   const title = React.useRef(null);
@@ -26,6 +29,17 @@ const NewArticle = ({currentUser, loadArticles}) => {
   const handleSubmit = async e => {
     e.preventDefault();
     
+    if(!title.current.value || title.current.value.trim()===""){
+      setError("Title is required");
+      setTimeout(unsetError, 100);
+      return;
+    }
+    if(!content.current.value || content.current.value.trim()===""){
+      setError("Content is required");
+      setTimeout(unsetError, 100);
+      return;
+    }
+
     const date = new Date();
     const data = {
       title: title.current.value,
@@ -36,12 +50,11 @@ const NewArticle = ({currentUser, loadArticles}) => {
     }
 
     try{
-        const response = await addArticle(data);
-        if(response.success){
-          loadArticles();
-        } 
+      addArticle(data);
+      title.current.value="";
+      content.current.value="";
     } catch(err){
-        console.log(err);
+      console.log(err);
     }
   };
   
@@ -87,4 +100,16 @@ const NewArticle = ({currentUser, loadArticles}) => {
     </div>
   );
 }
-export default NewArticle;
+
+
+const mapStateToProps = state => ({
+  currentUser: state.auth.currentUser
+})
+
+const mapDispatchToProps = {
+  addArticle,
+  setError,
+  unsetError
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewArticle);

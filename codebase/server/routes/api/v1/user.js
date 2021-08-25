@@ -52,7 +52,7 @@ router.post('/',
         //Get validation middleware result
         const validationErrors = validationResult(req);
         if(!validationErrors.isEmpty()){
-            return res.status(400).json({
+            return res.json({
                 error: validationErrors.array(),
                 success: false
             });
@@ -64,7 +64,7 @@ router.post('/',
         }
 
         const result = await registerUser(newUser);
-        return res.status(result.status).json(result.response)
+        return res.json(result.response)
 })
 
 

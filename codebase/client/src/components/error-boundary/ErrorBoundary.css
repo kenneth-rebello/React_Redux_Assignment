@@ -1,0 +1,14 @@
+.error{
+    height: 90vh;
+    background-color: mediumaquamarine;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: royalblue;
+    text-shadow: 1px 0px 1px black;
+}
+
+.error img{
+    height: 50vh;
+}
