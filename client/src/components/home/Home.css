@@ -27,11 +27,13 @@
     justify-content: space-around;
 }
 .home .search{
-    margin: 5px 70px;
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 @media screen and (max-width: 400px){
-    .articles{
+    .home .articles{
         grid-template-columns: auto;
     }
 }
